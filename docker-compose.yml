@@ -1,0 +1,30 @@
+version: "3"
+services:
+  nginx:
+    image: 730335321184.dkr.ecr.ap-southeast-1.amazonaws.com/nginx-app-cyclone:latest
+    restart: always
+    depends_on:
+      - backend
+      - frontend
+    ports:
+      - "80:80"
+
+  mysql:
+    image: mysql:8.0
+    env_file: "./docker-compose-env/database.env"
+    volumes:
+      - mysql-data:/var/lib/mysql 
+    ports:
+      - "33061:3306"
+
+  backend:
+    image: 730335321184.dkr.ecr.ap-southeast-1.amazonaws.com/backend-app-cyclone:latest
+    env_file: "./docker-compose-env/backend.app.env"
+    depends_on:
+      - mysql
+
+  frontend:
+    image: 730335321184.dkr.ecr.ap-southeast-1.amazonaws.com/frontend-app-cyclone:latest
+
+volumes:
+  mysql-data:
